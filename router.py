@@ -1,5 +1,6 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, Response
+from camera import VideoCamera
+import cv2
 app = Flask(__name__)
 
 
@@ -11,15 +12,19 @@ def hello_world():
 @app.route('/camera/<int:status>')
 def camera(status):
     if status:
-        cameraOnOff(status)
+        #cameraOnOff(status)
         return render_template('camera.html', status=status)
     else:
-        cameraOnOff(status)
+        #cameraOnOff(status)
         return render_template('camera.html', status=status)
 
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
-def cameraOnOff(status):
-    if status:
-        print("Camera ON")
-    else:
-        print("Camera OFF")
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen(VideoCamera()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
