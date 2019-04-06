@@ -14,5 +14,5 @@ script:
   - pytest
   - coverage run test_travis.py
 after_script:
-  - coverage report
+  - coverage xml
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
