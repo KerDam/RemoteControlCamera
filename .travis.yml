@@ -12,7 +12,7 @@ before_script:
   - ./cc-test-reporter before-build
 script: 
   - pytest
-  - coverage run 
+  - coverage run test_travis.py
 after_script:
   - coverage report
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
