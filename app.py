@@ -1,9 +1,12 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, session, request, session, flash, abort
 from flask_nav import Nav
 from flask_nav.elements import Navbar, Subgroup, Text, View
 from flask_bootstrap import Bootstrap
 from camera import VideoCamera
 import cv2
+from sqlalchemy.orm import sessionmaker
+from tabledef import *
+engine = create_engine('sqlite:///tutorial.db', echo=True)
 
 app = Flask(__name__)
 nav = Nav(app)
@@ -18,9 +21,33 @@ def create_navbar():
 
 @app.route('/')
 def home():
-    return render_template('base.html')
+    if not session.get('logged_in'):
+        print('I am here') #--------------------------------TO DELETE
+        return render_template('login.html')
+    else:
+        return render_template('base.html')
 
-    
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    print('I am in do login') #--------------------------------TO DELETE
+    POST_USERNAME = str(request.form['username'])
+    POST_PASSWORD = str(request.form['password'])
+    print('posting') #--------------------------------TO DELETE
+    Session = sessionmaker(bind=engine)
+    s = Session()
+    query = s.query(User).filter(User.username.in_([POST_USERNAME]), User.password.in_([POST_PASSWORD]) )
+    result = query.first()
+    if result:
+        session['logged_in'] = True
+    else:
+        flash('wrong password!')
+    return home()
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
+
 @app.route('/live/<int:status>')
 def live(status):
     #return render_template('live.html')
@@ -60,8 +87,6 @@ def gen(camera):
 def video_feed():
     return Response(gen(VideoCamera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
 #def cameraOnOff(status):
     #if status:
         #print("Camera ON")
