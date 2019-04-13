@@ -45,13 +45,13 @@
     }
      
     input:focus {
-    border: 2px solid #3498DB;
+    border: 2px solid #2b3e50;
     box-shadow: none;
     }
      
     .btn {
     border: 2px solid transparent;
-    background: #3498DB;
+    background: #2b3e50;
     color: #ffffff;
     font-size: 16px;
     line-height: 25px;
@@ -67,7 +67,7 @@
     }
      
     .btn:hover {
-    background-color: #2980B9;
+    background-color: #2b3e50;
     }
      
     .login-link {

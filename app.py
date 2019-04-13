@@ -1,13 +1,14 @@
-from flask import Flask, render_template, Response, session, request, session, flash, abort
+from flask import Flask, render_template, Response, session, request, session, flash, abort, redirect
 from flask_nav import Nav
 from flask_nav.elements import Navbar, Subgroup, Text, View
 from flask_bootstrap import Bootstrap
 from camera import VideoCamera
 import cv2
+import os
 from sqlalchemy.orm import sessionmaker
 from tabledef import *
-engine = create_engine('sqlite:///tutorial.db', echo=True)
 
+engine = create_engine('sqlite:///remoteCam.db', echo=True)
 app = Flask(__name__)
 nav = Nav(app)
 Bootstrap(app)
@@ -22,17 +23,14 @@ def create_navbar():
 @app.route('/')
 def home():
     if not session.get('logged_in'):
-        print('I am here') #--------------------------------TO DELETE
         return render_template('login.html')
     else:
         return render_template('base.html')
 
 @app.route('/login', methods=['POST'])
 def do_admin_login():
-    print('I am in do login') #--------------------------------TO DELETE
     POST_USERNAME = str(request.form['username'])
     POST_PASSWORD = str(request.form['password'])
-    print('posting') #--------------------------------TO DELETE
     Session = sessionmaker(bind=engine)
     s = Session()
     query = s.query(User).filter(User.username.in_([POST_USERNAME]), User.password.in_([POST_PASSWORD]) )
@@ -92,3 +90,5 @@ def video_feed():
         #print("Camera ON")
     #else:
         #print("Camera OFF")
+
+app.secret_key = os.urandom(12)
