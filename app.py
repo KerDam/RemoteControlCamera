@@ -48,7 +48,6 @@ def logout():
 
 @app.route('/live/<int:status>')
 def live(status):
-    #return render_template('live.html')
     if status:        
         return render_template('live.html', status=status)
     else:        
@@ -57,7 +56,7 @@ def live(status):
 
 @app.route('/gallery')
 def gallery():
-    return render_template('live.html')
+    return render_template('gallery.html')
 
 #base webcam code
 

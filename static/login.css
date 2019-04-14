@@ -7,7 +7,7 @@
     }
     body {
     font-family: Arial;
-    background-color: #3498DB;
+    background-color: #2b3e50;
     padding: 50px;
     }
     .login {
@@ -67,7 +67,7 @@
     }
      
     .btn:hover {
-    background-color: #2b3e50;
+    background-color: #1d2a36;
     }
      
     .login-link {
