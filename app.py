@@ -27,8 +27,9 @@ def home():
     else:
         return render_template('base.html')
 
+#login method
 @app.route('/login', methods=['POST'])
-def do_admin_login():
+def do_login():
     POST_USERNAME = str(request.form['username'])
     POST_PASSWORD = str(request.form['password'])
     Session = sessionmaker(bind=engine)
@@ -41,11 +42,13 @@ def do_admin_login():
         flash('wrong password!')
     return home()
 
+# logout (NOT IMPLEMENTED ON THE WEBPAGE)
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
     return home()
 
+#live method, status: condition of which state on the page will be presented
 @app.route('/live/<int:status>')
 def live(status):
     if status:        
@@ -54,6 +57,7 @@ def live(status):
         return render_template('live.html', status=status)
     
 
+# TODO has to request images from the FTP server or other DB
 @app.route('/gallery')
 def gallery():
     return render_template('gallery.html')
