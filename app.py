@@ -51,16 +51,22 @@ def logout():
 #live method, status: condition of which state on the page will be presented
 @app.route('/live/<int:status>')
 def live(status):
-    if status:        
-        return render_template('live.html', status=status)
-    else:        
-        return render_template('live.html', status=status)
-    
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        if status:        
+            return render_template('live.html', status=status)
+        else:        
+            return render_template('live.html', status=status)
+        
 
 # TODO has to request images from the FTP server or other DB
 @app.route('/gallery')
 def gallery():
-    return render_template('gallery.html')
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template('gallery.html')
 
 #base webcam code
 
