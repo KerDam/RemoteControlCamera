@@ -1,0 +1,8 @@
+{% extends "bootstrap/base.html" %}
+{% block navbar %}
+{{nav.site_navbar.render()}}
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='theme.css')}}">
+{% endblock %}

@@ -1,0 +1,9 @@
+command to install SQLite and other libraries:
+sudo pip install Flask-SqlAlchemy
+pip install Flask-SqlAlchemy --user         //Windows
+
+Create DataBase, execute:
+python tabledef.py
+
+To insert Data in the table, execute:
+python dummy.py

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Live{% endblock %}
+{% block content %}
+
+
+{% if status == 1%}
+<div style="margin-left: 20px">
+    <h2>Video Streaming Demonstration</h2>
+</div>
+<div style="text-align: center">
+    <a href="0">
+        <button type=button>Off</button>
+    </a>
+</div>
+    <br>
+    <div style="text-align: center">
+        <img id="bg" src="{{ url_for('video_feed') }}">
+    </div>
+
+{% else %}
+    <h1>Video Streaming Demonstration</h1>
+    <a href="1">
+        <button type=button>On</button>
+    </a>
+{% endif %}
+
+{% endblock %}
