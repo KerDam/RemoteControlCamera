@@ -82,9 +82,9 @@ def gen(camera):
     firstFrame = None
 
     while True:
-        frame = camera.get_jpg_frame()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        #frame = camera.get_jpg_frame()
+        #yield (b'--frame\r\n'
+               #b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         
         #MOTION DETECTION
         
@@ -99,7 +99,8 @@ def gen(camera):
         frame = imutils.resize(frame, width=500)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
-
+        text = "Unoccupied"
+        
         # if the first frame is None, initialize it
         if firstFrame is None:
             firstFrame = gray
@@ -122,12 +123,14 @@ def gen(camera):
             # if the contour is too small, ignore it
             if cv2.contourArea(c) < 500:
                 continue
-            print("Occupied")
-
+            text = "Occupied"
+        cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             
-    frame = camera.get_frame()
-    yield (b'--frame\r\n'
-            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        ret, jpeg = cv2.imencode('.jpg', frame)
+        frame = jpeg.tobytes()
+        yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
     
 @app.route('/video_feed')
 def video_feed():
