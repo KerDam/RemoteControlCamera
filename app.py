@@ -80,6 +80,7 @@ def gallery():
 def gen(camera):
     
     firstFrame = None
+    previous_time = time.time() # Get the time before motion detection
 
     while True:
         #frame = camera.get_jpg_frame()
@@ -121,9 +122,18 @@ def gen(camera):
         # loop over the contours
         for c in cnts:
             # if the contour is too small, ignore it
+            #print(cv2.contourArea(c))
             if cv2.contourArea(c) < 500:
                 continue
             text = "Occupied"
+            timestr = time.strftime("%Y%m%d_%H%M%S") # Create a timestamp
+            now_time = time.time()
+            
+            if abs(int(now_time - previous_time)) > 2 :
+                print("capture")
+                previous_time = time.time()           
+                cv2.imwrite('captures/'+timestr+'.jpg',frame) #Save the curren frame
+        
         cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             
