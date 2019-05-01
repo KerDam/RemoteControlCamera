@@ -1,4 +1,7 @@
 from ftp_uploader import *
+import unittest
+import ftplib
+from mock import patch, mock_open, MagicMock
 
 
 def test_local_list_empty_folder():
@@ -25,10 +28,21 @@ def test_diff_fct():
     list = Diff(['1','2'], ['3','2'])
     assert list == ['1']
     
-def test_list_remote_files():
-    ftp = ftplib.FTP("files.000webhost.com")
-    ftp.login("axc-agile", "axc-agile")
-    ftp.cwd("/ftp_tests") 
-    list = list_remote_files(ftp)
-    assert list == ['1.jpg', '2.jpg']
+class TestUploader(unittest.TestCase):
+
+    @patch('ftplib.FTP', autospec=True)
+    def test_download_file(self, mock_ftp_constructor):
+        mock_ftp = mock_ftp_constructor.return_value
+        mocked_file = MagicMock()
+        
+        ftp = ftplib.FTP('ftp.server.local')
+        ftp.login()
+
+        data = ['test.txt','test.jpg']
+        upload_files(ftp, data)
+
+        mock_ftp_constructor.assert_called_with('ftp.server.local')
+        self.assertTrue(mock_ftp.login.called)
+        mock_ftp_constructor.return_value.storbinary.assert_called_with(
+            'STOR test.jpg', "test.jpg")
     

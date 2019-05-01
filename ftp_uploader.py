@@ -1,12 +1,5 @@
 import ftplib
 import os, fnmatch
-
-def upload(ftp, file):
-    ext = os.path.splitext(file)[1]
-    if ext in (".txt", ".htm", ".html"):
-        ftp.storlines("STOR " + file, open(file))
-    else:
-        ftp.storbinary("STOR " + file, open(file, "rb"), 1024)
       
 def Diff(li1, li2): 
     return (list(set(li1) - (set(li2))))
@@ -44,7 +37,7 @@ def list_local_files(dir):
 def upload_files(ftp, files_to_upload):
     for entry in files_to_upload:  
         print ("Uploading " + entry + "...") 
-        upload(ftp, entry)
+        ftp.storbinary('STOR ' + entry, entry)
 
 #Delete uploaded files
 def delete_files(local_list):
