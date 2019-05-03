@@ -57,9 +57,9 @@ def logout():
 #live method, status: condition of which state on the page will be presented
 @app.route('/live/<int:status>')
 def live(status):
-    if not session.get('logged_in'):
-        return render_template('login.html')
-    else:
+    #if not session.get('logged_in'):
+        #return render_template('login.html')
+    #else:
         if status:        
             return render_template('live.html', status=status)
         else:        
@@ -74,6 +74,31 @@ def gallery():
     else:
         return render_template('gallery.html')
 
+def motion_detect(firstFrame, gray, cv2):
+        # compute the absolute difference between the current frame and
+    # first frame
+    frameDelta = cv2.absdiff(firstFrame, gray)
+    thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
+
+    # dilate the thresholded image to fill in holes, then find contours
+    # on thresholded image
+    thresh = cv2.dilate(thresh, None, iterations=2)
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+
+    # loop over the contours
+    for c in cnts:
+        # if the contour is too small, ignore it
+        if cv2.contourArea(c) > 500:    
+            return 1
+        else:
+            return 0
+        
+def save_frame(frame):
+    timestr = time.strftime("%Y%m%d_%H%M%S") # Create a timestamp
+    cv2.imwrite('captures/'+timestr+'.jpg',frame) #Save the curren frame
+
 
 # Webcam handling
 
@@ -81,12 +106,9 @@ def gen(camera):
     
     firstFrame = None
     previous_time = time.time() # Get the time before motion detection
-
+    text = "Unoccupied"
+    
     while True:
-        #frame = camera.get_jpg_frame()
-        #yield (b'--frame\r\n'
-               #b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-        
         #MOTION DETECTION
         
         frame = camera.get_frame()
@@ -98,45 +120,34 @@ def gen(camera):
 
         # resize the frame, convert it to grayscale, and blur it
         frame = imutils.resize(frame, width=500)
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (21, 21), 0)
-        text = "Unoccupied"
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray_frame = cv2.GaussianBlur(gray_frame, (21, 21), 0)
         
         # if the first frame is None, initialize it
         if firstFrame is None:
-            firstFrame = gray
+            firstFrame = gray_frame
             continue
-
-        # compute the absolute difference between the current frame and
-        # first frame
-        frameDelta = cv2.absdiff(firstFrame, gray)
-        thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
-
-        # dilate the thresholded image to fill in holes, then find contours
-        # on thresholded image
-        thresh = cv2.dilate(thresh, None, iterations=2)
-        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-            cv2.CHAIN_APPROX_SIMPLE)
-        cnts = imutils.grab_contours(cnts)
-
-        # loop over the contours
-        for c in cnts:
-            # if the contour is too small, ignore it
-            #print(cv2.contourArea(c))
-            if cv2.contourArea(c) < 500:
-                continue
+        
+        
+        
+        if (motion_detect(firstFrame, gray_frame, cv2) == 1):
             text = "Occupied"
-            timestr = time.strftime("%Y%m%d_%H%M%S") # Create a timestamp
+            
+            #Delay for saving frames
             now_time = time.time()
             
             if abs(int(now_time - previous_time)) > 2 :
                 print("capture")
-                previous_time = time.time()           
-                cv2.imwrite('captures/'+timestr+'.jpg',frame) #Save the curren frame
+                previous_time = time.time()    
+                save_frame(frame)
+        else:
+            text = "Unoccupied"
         
+        #add Room status text to video feed
         cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             
+        #convert the frame to jpg image and save it
         ret, jpeg = cv2.imencode('.jpg', frame)
         frame = jpeg.tobytes()
         yield (b'--frame\r\n'
