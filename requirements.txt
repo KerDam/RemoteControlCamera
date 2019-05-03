@@ -2,3 +2,7 @@ opencv-python
 pytest
 flask
 coverage
+imutils
+flask-nav
+flask-bootstrap
+sqlalchemy
