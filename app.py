@@ -21,17 +21,16 @@ Bootstrap(app)
 
 @nav.navigation('site_navbar')
 def create_navbar():
-    home_view = View('Home', 'home')
     live_view = View('Live','live',status=0) #init with OFF state of the webcam
     gallery_view = View('Gallery','gallery')
-    return Navbar('RemoteCamera', home_view, live_view, gallery_view)
+    return Navbar('RemoteCamera', live_view, gallery_view)
 
 @app.route('/')
 def home():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return render_template('base.html')
+        return render_template('live.html')
 
 #login method
 @app.route('/login', methods=['POST'])
@@ -127,8 +126,6 @@ def gen(camera):
         if firstFrame is None:
             firstFrame = gray_frame
             continue
-        
-        
         
         if (motion_detect(firstFrame, gray_frame, cv2) == 1):
             text = "Occupied"
