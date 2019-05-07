@@ -28,21 +28,21 @@ def test_diff_fct():
     list = Diff(['1','2'], ['3','2'])
     assert list == ['1']
     
-class TestUploader(unittest.TestCase):
+#class TestUploader(unittest.TestCase):
 
-    @patch('ftplib.FTP', autospec=True)
-    def test_download_file(self, mock_ftp_constructor):
-        mock_ftp = mock_ftp_constructor.return_value
-        mocked_file = MagicMock()
+    #@patch('ftplib.FTP', autospec=True)
+    #def test_download_file(self, mock_ftp_constructor):
+        #mock_ftp = mock_ftp_constructor.return_value
+        #mocked_file = MagicMock()
         
-        ftp = ftplib.FTP('ftp.server.local')
-        ftp.login()
+        #ftp = ftplib.FTP('ftp.server.local')
+        #ftp.login()
 
-        data = ['test.txt','test.jpg']
-        upload_files(ftp, data)
+        #data = ['test.txt','test.jpg']
+        #upload_files(ftp, data)
 
-        mock_ftp_constructor.assert_called_with('ftp.server.local')
-        self.assertTrue(mock_ftp.login.called)
-        mock_ftp_constructor.return_value.storbinary.assert_called_with(
-            'STOR test.jpg', "test.jpg")
+        #mock_ftp_constructor.assert_called_with('ftp.server.local')
+        #self.assertTrue(mock_ftp.login.called)
+        #mock_ftp_constructor.return_value.storbinary.assert_called_with(
+            #'STOR test.jpg', "test.jpg")
     

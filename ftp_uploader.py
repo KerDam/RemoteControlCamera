@@ -15,9 +15,9 @@ def list_remote_files(ftp):
                 split_part = entry.split() #split to get only the name of the file
                 ftp_list.append(split_part[-1]) #take the last element of the list (name of the file) and add it 
                 
-    print("FTP jpg files list :")
-    print(ftp_list)
-    print("-----")    
+    #print("FTP jpg files list :")
+    #print(ftp_list)
+    #print("-----")    
     return ftp_list
 
 def list_local_files(dir):       
@@ -28,16 +28,16 @@ def list_local_files(dir):
     for entry in listOfFiles:  
         if fnmatch.fnmatch(entry, pattern):
                 local_list.append(entry)
-    print("Local jpg files list :")
-    print(local_list)
-    print("-----")
+    #print("Local jpg files list :")
+    #print(local_list)
+    #print("-----")
     return local_list
     
 # upload sequence
 def upload_files(ftp, files_to_upload):
     for entry in files_to_upload:  
         print ("Uploading " + entry + "...") 
-        ftp.storbinary('STOR ' + entry, entry)
+        ftp.storbinary("STOR " + entry, open(entry, "rb"), 1024)
 
 #Delete uploaded files
 def delete_files(local_list):

@@ -98,7 +98,7 @@ def test_save_frame():
             print(entry)
             print(timestr)
             if fnmatch.fnmatch(entry, timestr + ".jpg"):
-                frame_found = 1
+                frame_found = 0
     assert frame_found
     # When everything done, release the video capture object
     cap.release()
