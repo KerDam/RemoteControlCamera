@@ -6,4 +6,3 @@ imutils
 flask-nav
 flask-bootstrap
 sqlalchemy
-fnmatch
