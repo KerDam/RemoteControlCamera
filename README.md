@@ -23,7 +23,8 @@ _You will also need a webcam._
 
 ## Usage
 
-Start the server with ./run
+Start the server with :
+    python app.py
 
 Login on 127.0.0.1:5000 port (local machine)
 Username : agile
