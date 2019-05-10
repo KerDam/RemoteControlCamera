@@ -78,27 +78,26 @@ def test_save_frame():
     cap = cv2.VideoCapture('open_cv_tests/2.avi')
     detection = 5
     firstFrame = None
-    timestr = 0
     # Read until video is completed
     while(cap.isOpened()):
         # Capture frame-by-frame
         ret, frame = cap.read()
         if ret == True:
-            timestr = time.strftime("%Y%m%d_%H%M%S") # Create a timestamp
 
-            save_frame(frame)
+            save_frame(frame,"test.jpg")
             break    
         # Break the loop
         else: 
             break
     frame_found = 0
     
-    for root, dirs, files in os.walk("captures/"):  
-        for entry in files:
-            print(entry)
-            print(timestr)
-            if fnmatch.fnmatch(entry, timestr + ".jpg"):
-                frame_found = 0
+    listOfFiles = os.listdir(".")  
+    for entry in listOfFiles:  
+        if fnmatch.fnmatch(entry, "test.jpg"):
+            frame_found = 1
     assert frame_found
     # When everything done, release the video capture object
     cap.release()
+
+def test_get_timestamp():
+    assert get_timestamp() == time.strftime("%Y%m%d_%H%M%S")

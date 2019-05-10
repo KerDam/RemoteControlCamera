@@ -32,9 +32,12 @@ class VideoCamera(object):
 FRAME_SAVING_INTERVAL = 2 #seconds
 MONTION_DETECTION_SENSITIVITY = 500
 
-def save_frame(frame):
-    timestr = time.strftime("%Y%m%d_%H%M%S") # Create a timestamp
-    cv2.imwrite('captures/'+timestr+'.jpg',frame) #Save the curren frame
+def get_timestamp():
+    return time.strftime("%Y%m%d_%H%M%S") # Create a timestamp
+
+
+def save_frame(frame, name):
+    cv2.imwrite(name,frame) #Save the curren frame
 
 def motion_detect(firstFrame, gray, cv2):
         # compute the absolute difference between the current frame and
@@ -91,7 +94,8 @@ def gen(camera):
             if abs(int(now_time - previous_time)) > FRAME_SAVING_INTERVAL :
                 print("capture")
                 previous_time = time.time()    
-                save_frame(frame)
+                save_path = 'captures/'+get_timestamp()+'.jpg'
+                save_frame(frame, save_path)
         else:
             text = "Unoccupied"
             
