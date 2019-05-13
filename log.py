@@ -2,9 +2,10 @@ from datetime import datetime
 
 
 def logDate():
-    with open("log.txt", 'a') as f:
-        today = datetime.today()
-        print(today.isoformat(), file=f)
+    f = open("log.txt", 'a')
+    today = datetime.today()
+    f.write(today.isoformat())
+    f.close()
     return 0
 
 
