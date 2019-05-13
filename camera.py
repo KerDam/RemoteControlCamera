@@ -29,7 +29,7 @@ class VideoCamera(object):
 
 # Webcam handling
 
-FRAME_SAVING_INTERVAL = 2 #seconds
+FRAME_SAVING_INTERVAL = 1 #seconds
 MONTION_DETECTION_SENSITIVITY = 500
 
 def get_timestamp():

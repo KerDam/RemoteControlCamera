@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from tabledef import *
 from multiprocessing import Process, Value
 from ftp_uploader import *
+#from log import *
 
 import argparse, datetime, time, imutils
 
@@ -20,8 +21,9 @@ Bootstrap(app)
 
 #Uploader Parameters
 NB_LOCAL_FILES_LIMIT = 5
+TIME_INTERVAL_LOCAL_FILES_CHECKING = 1 
 SERVER_ADDRESS = "files.000webhost.com"
-UPLOAD_DIR = "uploads/"
+UPLOAD_DIR = "public_html/uploads/"
 #FTP Credentials
 ftp_username = "axc-agile"
 ftp_pass = "axc-agile"
@@ -39,7 +41,7 @@ def home():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return render_template('live.html')
+        return render_template('gallery.html')
 
 #login method
 @app.route('/login', methods=['POST'])
@@ -54,13 +56,13 @@ def do_login():
         session['logged_in'] = True
     else:
         flash('wrong password!')
-    return home()
+    return gallery()
 
 # logout (NOT IMPLEMENTED ON THE WEBPAGE)
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
-    return home()
+    return gallery()
 
 #live method, status: condition of which state on the page will be presented
 @app.route('/live/<int:status>')
@@ -100,9 +102,10 @@ def upload_loop():
             data = Diff(list_local_files("captures/"), list_remote_files(ftp))
             os.chdir(r"captures/") 
             upload_files(ftp, data)
+            ftp.quit()
             delete_files(data)
             os.chdir(r"..") 
-       time.sleep(5)
+       time.sleep(TIME_INTERVAL_LOCAL_FILES_CHECKING)
 
 if __name__ == "__main__":
     p = Process(target=upload_loop)
