@@ -15,7 +15,7 @@ _In order to run our application, you will need to download and install the foll
 
 Installation of Python libraries : 
 
-    sudo pip install flask flask-nav flask-bootstrap sqlalchemy
+    pip install -r requirements.txt
 
 OpenCV install script : https://github.com/milq/milq/blob/master/scripts/bash/install-opencv.sh
 
@@ -30,7 +30,6 @@ Login on 127.0.0.1:5000 port (local machine)
 Username : agile
 Password : agile
 
- - Home tab:
  - Live tab: Click on the on/off button to turn on/off the webcam. The live stream will be displayed and the motion detection will be performed as well.
  - Gallery tab: Displays the screenshots taken by the motion detection with timestamp.
 

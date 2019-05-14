@@ -81,9 +81,9 @@ def gallery():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        ftp = ftplib.FTP("files.000webhost.com")
-        ftp.login("axc-agile", "axc-agile")
-        ftp.cwd("/public_html/uploads")
+        ftp = ftplib.FTP(SERVER_ADDRESS)
+        ftp.login(ftp_username,ftp_pass)
+        ftp.cwd(UPLOAD_DIR) 
         img_list = list_remote_files(ftp)
         ftp.quit()
         return render_template('gallery.html', img_list=img_list)
