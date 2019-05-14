@@ -8,6 +8,7 @@ import cv2
 import os
 from sqlalchemy.orm import sessionmaker
 from tabledef import *
+from ftp_uploader import *
 
 import argparse
 import datetime
@@ -56,25 +57,29 @@ def logout():
 #live method, status: condition of which state on the page will be presented
 @app.route('/live/<int:status>')
 def live(status):
-    #if not session.get('logged_in'):
-        #return render_template('login.html')
-    #else:
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
         if status:        
             return render_template('live.html', status=status)
         else:        
             return render_template('live.html', status=status)
         
 
-# TODO has to request images from the FTP server or other DB
-@app.route('/gallery')
+# Requests the images to the ftp server
+@app.route('/gallery', methods=['GET'])
 def gallery():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return render_template('gallery.html')
+        ftp = ftplib.FTP("files.000webhost.com")
+        ftp.login("axc-agile", "axc-agile")
+        ftp.cwd("/public_html/uploads")
+        img_list = list_remote_files(ftp)
+        return render_template('gallery.html', img_list=img_list)
 
 def motion_detect(firstFrame, gray, cv2):
-        # compute the absolute difference between the current frame and
+    # compute the absolute difference between the current frame and
     # first frame
     frameDelta = cv2.absdiff(firstFrame, gray)
     thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]

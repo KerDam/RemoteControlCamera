@@ -15,9 +15,9 @@ def list_remote_files(ftp):
                 split_part = entry.split() #split to get only the name of the file
                 ftp_list.append(split_part[-1]) #take the last element of the list (name of the file) and add it 
                 
-    print("FTP jpg files list :")
-    print(ftp_list)
-    print("-----")    
+#     print("FTP jpg files list :")
+#     print(ftp_list)
+#     print("-----")    
     return ftp_list
 
 def list_local_files(dir):       

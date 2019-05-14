@@ -1,5 +1,26 @@
 {% extends "base.html" %}
 {% block title %}Gallery{% endblock %}
-<div>
-    <h2>Coming soon...Still in Development</h2>
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header">Motion Detection Pictures</h2>
+        </div>
+        {%for img_name in img_list%}
+        <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+            <div class="card" style="width: 18rem; margin-top: 20px; text-align: center">
+                <img
+                src="https://axc-agile.000webhostapp.com/uploads/{{img_name}}"
+                alt="img_list"
+                style="height: 180px; width: 100%; display: block;">
+                <div class="card-body">
+                  <h5 class="card-title">{{img_name}}</h5>
+                  <p class="card-text">Motion Detected</p>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
 </div>
+{% endblock %}
