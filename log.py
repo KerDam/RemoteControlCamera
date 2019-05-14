@@ -1,0 +1,13 @@
+from datetime import datetime
+
+
+def logDate():
+    f = open("captures/log.txt", 'a')
+    today = datetime.today()
+    f.write(today.isoformat()+ "\n")
+    f.close()
+    return 0
+
+
+if __name__ == '__main__':
+    logDate()
